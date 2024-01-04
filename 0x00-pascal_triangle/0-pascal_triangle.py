@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-# Pascal Triangle formation
+""" Pascal Triangle formation"""
+
 
 def pascal_triangle(n):
     """
@@ -11,6 +12,9 @@ def pascal_triangle(n):
 
       Returns: list of lists
     """
+    if n <= 0:
+        return []
+
     start_list = [1]  # I initialized a list [1] typical of pascal triangle
     pascal_list = []  # This becomes the list of lists I return
 
