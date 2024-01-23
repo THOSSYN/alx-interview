@@ -9,6 +9,7 @@ if __name__ == '__main__':
     status = []
     unique_status = set()
     file_size = 0
+    start = 0
 
     try:
         for line in fileinput.input():
@@ -17,13 +18,15 @@ if __name__ == '__main__':
             file_size += int(line[8])
             status.append(current_status)
 
-            if len(status) == 10:
+            batch = start + 10
+            if len(status) == batch:
                 print(f"File size: {file_size}")
                 for unique_item in sorted(set(status)):
                     stat_count = f"{unique_item}: {status.count(unique_item)}"
                     print(stat_count)
 
-                status = []
+                # status = []
+                start = batch
 
     except KeyboardInterrupt:
         print(f"File size: {file_size}")
