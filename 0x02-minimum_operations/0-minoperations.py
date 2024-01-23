@@ -1,12 +1,14 @@
-#!/usr/bin/env python3
-"""Determining the number of operatons
-   that forms a combination
-"""
+#!/usr/bin/python3
+"""An interview preparation project"""
+
 
 def minOperations(n: int) -> int:
-    """A function that determines the number of operation
-       required to form n numbers of H
+    """A function that determines number of
+       copy all and paste operations
     """
+    operations = 0
+    divisor = 2
+
     if n == 1:
         return 0
 
@@ -17,7 +19,6 @@ def minOperations(n: int) -> int:
         while n % divisor == 0:
             n //= divisor
             operations += divisor
-
         divisor += 1
 
     return operations
