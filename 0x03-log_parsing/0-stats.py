@@ -1,57 +1,51 @@
 #!/usr/bin/python3
-"""Log Parser"""
+"""Log parsing"""
 
 import sys
 
 
-def print_stats(total_size, status_codes):
-    """Prints the stats of a log file
+def line_parser(line: str):
+    """Does line splitting"""
+    split_line = line.split()
 
-       Args:
-        total_size: is the size of file
-        status_code: is the status code returned
-    """
-    print("File size: {:d}".format(total_size))
-    for code, count in sorted(status_codes.items()):
-        print("{:s}: {:d}".format(code, count))
+    ip, _, date, time, query, _, _, status, size = split_line
+
+    return status, size
 
 
-def parse_line(line):
-    """Parses each each line of stats read
-
-       Args:
-        line: is the stats read
-    """
-    line_parts = line.split()
-    if len(line_parts) >= 2:
-        return int(line_parts[-1]), line_parts[-2]
-    return None, None
-
-
-def compute_metrics():
-    """determines the status code and file_size"""
+def get_metric():
+    """Compute metrics read from an API"""
+    group_list = []
     total_size = 0
-    status_codes = {}
+    prev_len = 0
 
     try:
-        for i, line in enumerate(sys.stdin, 1):
-            file_size, status_code = parse_line(line.strip())
-            if file_size is not None and status_code is not None:
-                total_size += file_size
-                if status_code in status_codes:
-                    status_codes[status_code] += 1
-                else:
-                    status_codes[status_code] = 1
+        for line in sys.stdin:
+            line = line.strip()
+            status_code, size = line_parser(line)
 
-                if i % 10 == 0:
-                    print_stats(total_size, status_codes)
+            total_size += int(size)
+
+            group_list.append(status_code)
+
+            list_len = len(group_list)
+
+            if list_len == 10 + prev_len:
+                print_metric(group_list, total_size)
+                prev_len += 10
 
     except KeyboardInterrupt:
-        print_stats(total_size, status_codes)
+        print_metric(group_list, total_size)
         raise
 
-    print_stats(total_size, status_codes)
+
+def print_metric(status_list, total_size):
+    """Display metrics for the requests made"""
+    print(f"File size: {total_size}")
+    for status in sorted(set(status_list)):
+        unique_status_count = status_list.count(status)
+        print(f"{status}: {unique_status_count}")
 
 
-if __name__ == "__main__":
-    compute_metrics()
+if __name__ == '__main__':
+    get_metric()
