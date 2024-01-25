@@ -12,6 +12,7 @@ def line_parser(line: str):
 
     return status, int(size)
 
+
 def print_metric(status_list, total_size):
     """Display metrics for the requests made"""
     print(f"File size: {total_size}")
