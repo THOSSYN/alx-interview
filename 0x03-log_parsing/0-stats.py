@@ -1,54 +1,57 @@
 #!/usr/bin/python3
-"""Reading from stdin"""
+"""Log Parser"""
 
 import sys
 
-def process_line(line):
-    """Process a line and return (status_code, file_size) if the line is valid."""
+
+def print_stats(total_size, status_codes):
+    """Prints the stats of a log file
+
+       Args:
+        total_size: is the size of file
+        status_code: is the status code returned
+    """
+    print("File size: {:d}".format(total_size))
+    for code, count in sorted(status_codes.items()):
+        print("{:s}: {:d}".format(code, count))
+
+
+def parse_line(line):
+    """Parses each each line of stats read
+
+       Args:
+        line: is the stats read
+    """
+    line_parts = line.split()
+    if len(line_parts) >= 2:
+        return int(line_parts[-1]), line_parts[-2]
+    return None, None
+
+
+def compute_metrics():
+    """determines the status code and file_size"""
+    total_size = 0
+    status_codes = {}
+
     try:
-        parts = line.split()
-        ip_address, _, _, date, request, status_code, file_size = parts[:7]
-        
-        if request != '"GET' or not status_code.isdigit() or not file_size.isdigit():
-            return None
-
-        return int(status_code), int(file_size)
-    except ValueError:
-        return None
-
-def print_statistics(file_sizes, status_counts):
-    """Print the computed statistics."""
-    total_size = sum(file_sizes)
-    print(f"Total file size: {total_size}")
-
-    for status_code in sorted(status_counts):
-        count = status_counts[status_code]
-        print(f"{status_code}: {count}")
-
-def main():
-    """Main function"""
-    file_sizes = []
-    status_counts = {}
-
-    try:
-        for line_number, line in enumerate(sys.stdin, start=1):
-            result = process_line(line.strip())
-            
-            if result is not None:
-                status_code, size = result
-                file_sizes.append(size)
-                
-                if status_code in status_counts:
-                    status_counts[status_code] += 1
+        for i, line in enumerate(sys.stdin, 1):
+            file_size, status_code = parse_line(line.strip())
+            if file_size is not None and status_code is not None:
+                total_size += file_size
+                if status_code in status_codes:
+                    status_codes[status_code] += 1
                 else:
-                    status_counts[status_code] = 1
+                    status_codes[status_code] = 1
 
-            if line_number % 10 == 0:
-                print_statistics(file_sizes, status_counts)
+                if i % 10 == 0:
+                    print_stats(total_size, status_codes)
 
     except KeyboardInterrupt:
-        print_statistics(file_sizes, status_counts)
-        sys.exit(1)
+        print_stats(total_size, status_codes)
+        raise
+
+    print_stats(total_size, status_codes)
+
 
 if __name__ == "__main__":
-    main()
+    compute_metrics()
