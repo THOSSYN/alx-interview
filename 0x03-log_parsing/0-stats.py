@@ -12,9 +12,16 @@ def line_parser(line: str):
 
     return status, int(size)
 
+def print_metric(status_list, total_size):
+    """Display metrics for the requests made"""
+    print(f"File size: {total_size}")
+    for status in sorted(set(status_list)):
+        unique_status_count = status_list.count(status)
+        print(f"{status}: {unique_status_count}")
 
-"""def get_metric():
-    Compute metrics read from an API
+
+def get_metric():
+    """Compute metrics read from an API"""
     group_list = []
     total_size = 0
     prev_len = 0
@@ -24,7 +31,7 @@ def line_parser(line: str):
             line = line.strip()
             status_code, size = line_parser(line)
 
-            total_size += int(size)
+            total_size += size
             group_list.append(status_code)
             list_len = len(group_list)
 
@@ -34,30 +41,24 @@ def line_parser(line: str):
 
     except KeyboardInterrupt:
         print_metric(group_list, total_size)
-        raise"""
+        raise
+    print_metric(group_list, total_size)
 
 
-"""def print_stats(status_list, total_size):
-    Display metrics for the requests made
-    print(f"File size: {total_size}")
-    for status in (status_list):
-        unique_status_count = status_list.count(status)
-        print(f"{status}: {unique_status_count}")"""
-
-def print_stats(total_size, status_codes):
+# def print_stats(total_size, status_code)
     """Prints the stats of a log file
 
        Args:
         total_size: is the size of file
         status_code: is the status code returned
     """
-    print("File size: {:d}".format(total_size))
+    """print("File size: {:d}".format(total_size))
     for code, count in sorted(status_codes.items()):
-        print("{:s}: {:d}".format(code, count))
+        print("{:s}: {:d}".format(code, count))"""
 
-def compute_metrics():
+# def compute_metrics():
     """determines the status code and file_size"""
-    total_size = 0
+    """total_size = 0
     status_codes = {}
 
     try:
@@ -77,8 +78,8 @@ def compute_metrics():
         print_stats(total_size, status_codes)
         raise
 
-    print_stats(total_size, status_codes)
+    print_stats(total_size, status_codes)"""
 
 
 if __name__ == '__main__':
-    compute_metrics()
+    get_metric()
