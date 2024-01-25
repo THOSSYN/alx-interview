@@ -77,7 +77,7 @@ def compute_metrics():
         print_stats(total_size, status_codes)
         raise
 
-    #print_stats(total_size, status_codes)
+    print_stats(total_size, status_codes)
 
 
 if __name__ == '__main__':
