@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 """A script for utf-8 validation"""
 
+from typing import List
 
-def validUTF8(data):
+
+def validUTF8(data: List) -> bool:
     """A function that validate if an input
        data is utf-8 compliant
     """
