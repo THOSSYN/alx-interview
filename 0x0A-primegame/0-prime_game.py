@@ -18,9 +18,9 @@ def isPrime(num):
     return True
 
 
-def isWinner(rounds, choice):
+def isWinner(x, nums):
     """Determines the winner of a prime game"""
-    for n in choice:
+    for n in nums:
         score_board = {'Maria': 0, 'Ben': 0}
         player_choice = list(range(1, n + 1))
         # Maria's turn
